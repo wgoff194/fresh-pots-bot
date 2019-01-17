@@ -7,9 +7,9 @@ Importing the nessecary modules:
 import os
 from slackclient import SlackClient
 from datetime import date, timedelta
-import requests
 from bs4 import BeautifulSoup
-
+import requests
+import time
 """
 Set Slack Token and Client
 """
