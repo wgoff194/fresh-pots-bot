@@ -1,10 +1,11 @@
 #!/usr/bin/python
 """
 Written by wbrown
-Importing the nessecary modules: 
+Importing the nessecary modules:
 'requests' to make the httpd request for the URL.
 """
-
+import os
+from slackclient import SlackClient
 from datetime import date, timedelta
 import requests
 from bs4 import BeautifulSoup
@@ -13,7 +14,7 @@ from bs4 import BeautifulSoup
 Set Slack Token and Client
 """
 
-export SLACK_BOT_TOKEN='xoxb-2151910542-528106946470-akZr0fVVW2QwZb05VF3imup3'
+SLACK_BOT_TOKEN = 'xoxb-2151910542-528106946470-akZr0fVVW2QwZb05VF3imup3'
 slack_client = SlackClient(SLACK_BOT_TOKEN)
 coffeebot_id = None
 
@@ -31,12 +32,12 @@ Set Classes
 
 def active_users():
     """
-    
+
     """
     user_in = []
     request = client.api_call("users.list")
     if request['ok']:
-        for sl_user request['members']:
+        for sl_user in request['members']:
             url = "https://wallboard.supportdev.liquidweb.com/api/data/agents/" + sl_user['name']
             html = requests.get(url)
             text = html.text
@@ -46,7 +47,7 @@ def active_users():
                 raise requests.ConnectionError("Expected status code 200, but got {}".format(page.status_code))
             for i in range(0, end):
                 if text[i] == 'punched':
-                    if int(i + int(2)) == 'true'
+                    if int(i + int(2)) == 'true':
                         user_in.append('@' + sl_user['name'])
 
 def parse_bot_commands(slack_events):
@@ -81,9 +82,9 @@ def handle_command(command, channel):
     # Finds and executes the given command, filling in response
     response = None
     # This is where you start to implement more commands!
-    if command.startswith(!fp):
+    if command.startswith('!fp'):
         #if command == "!fp new":
-            
+
         response = "Thank you for the test"
 
     # Sends the response back to the channel
@@ -112,52 +113,3 @@ if __name__ == "__main__":
             time.sleep(RTM_READ_DELAY)
     else:
         print("Connection failed. Exception traceback printed above.")
-        
-"""     
-#  Setting up the list of users:
-#   This will pull a list of users from channel in slack
-#   For testing I am just setting a userlist
-
-request = client.api_call("users.list")
-if request['ok']:
-    for item in request['members']:
-        print item['name']
-
-#
-#  Getting the sites data:
-#   This calls an internal site so this will need to be ran on Liquid Web's network.
-#   Pulling admin data.
-#   In this case, it's mine.
-#   Also ensures HTTP response is 200 before proceeding:
-#
-url = "https://wallboard.supportdev.liquidweb.com/api/data/agents/"
-html = requests.get(url)
-text = html.text
-text = text.split('"')
-end = len(text)
-
-if html.status_code != 200:
-    raise requests.ConnectionError("Expected status code 200, but got {}".format(page.status_code))
-
-#
-# Here's the magic:
-#  Loop through the lines of the URL and if a ticket status is found as 'work_in_progress',
-#  pull the status, ticket number, and subject number.
-#  Makes it pretty!
-#
-counter = 0
-
-for i in range(0, end):
-    if text[i] == 'punched' and text[i+2] == 'true':
-        hit = i
-        sta = int(hit)
-        tix = int(int(hit) + int(8))
-        sub = int(int(hit) + int(18))
-        words ="Ticket: " + text[tix] + " | Subject: " + text[sub] + " "
-        if counter % 2 == 0:
-            print(colors.bg.red,words)
-        else:
-            print(colors.bg.black,words)
-#        print(colors.reset,"------------------")
-        counter += 1
-"""
