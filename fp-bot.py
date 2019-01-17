@@ -1,27 +1,53 @@
 #!/usr/bin/python
-#
-# Written by wbrown
-#  Importing the nessecary modules: 
-#   'requests' to make the httpd request for the URL.
-#
+"""
+Written by wbrown
+Importing the nessecary modules: 
+'requests' to make the httpd request for the URL.
+"""
 
 from datetime import date, timedelta
 import requests
 from bs4 import BeautifulSoup
 
-#  Set Slack Token and Client
+"""
+Set Slack Token and Client
+"""
 
 export SLACK_BOT_TOKEN='xoxb-2151910542-528106946470-akZr0fVVW2QwZb05VF3imup3'
 slack_client = SlackClient(SLACK_BOT_TOKEN)
-starterbot_id = None
+coffeebot_id = None
 
-#  Set constants
+"""
+Set constants
+"""
 
 RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
 EXAMPLE_COMMAND = "!fp last"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
-#  Set Classes
+"""
+Set Classes
+"""
+
+def active_users():
+    """
+    
+    """
+    user_in = []
+    request = client.api_call("users.list")
+    if request['ok']:
+        for sl_user request['members']:
+            url = "https://wallboard.supportdev.liquidweb.com/api/data/agents/" + sl_user['name']
+            html = requests.get(url)
+            text = html.text
+            text = text.split('"')
+            end = len(text)
+            if html.status_code != 200:
+                raise requests.ConnectionError("Expected status code 200, but got {}".format(page.status_code))
+            for i in range(0, end):
+                if text[i] == 'punched':
+                    if int(i + int(2)) == 'true'
+                        user_in.append('@' + sl_user['name'])
 
 def parse_bot_commands(slack_events):
     """
@@ -32,7 +58,7 @@ def parse_bot_commands(slack_events):
     for event in slack_events:
         if event["type"] == "message" and not "subtype" in event:
             user_id, message = parse_direct_mention(event["text"])
-            if user_id == starterbot_id:
+            if user_id == coffeebot_id:
                 return message, event["channel"]
     return None, None
 
@@ -56,7 +82,8 @@ def handle_command(command, channel):
     response = None
     # This is where you start to implement more commands!
     if command.startswith(!fp):
-        #if command = 
+        #if command == "!fp new":
+            
         response = "Thank you for the test"
 
     # Sends the response back to the channel
@@ -71,9 +98,14 @@ def handle_command(command, channel):
 if __name__ == "__main__":
     if slack_client.rtm_connect(with_team_state=False):
         print("Starter Bot connected and running!")
+        refresh_users = 0
         # Read bot's user ID by calling Web API method `auth.test`
         starterbot_id = slack_client.api_call("auth.test")["user_id"]
         while True:
+            if refresh_users == 3600:
+                active_users()
+                refresh_users = 0
+            refresh_users += 1
             command, channel = parse_bot_commands(slack_client.rtm_read())
             if command:
                 handle_command(command, channel)
@@ -81,12 +113,11 @@ if __name__ == "__main__":
     else:
         print("Connection failed. Exception traceback printed above.")
         
-        
+"""     
 #  Setting up the list of users:
 #   This will pull a list of users from channel in slack
 #   For testing I am just setting a userlist
 
-client = SlackClient(SLACK_BOT_TOKEN)
 request = client.api_call("users.list")
 if request['ok']:
     for item in request['members']:
@@ -129,3 +160,4 @@ for i in range(0, end):
             print(colors.bg.black,words)
 #        print(colors.reset,"------------------")
         counter += 1
+"""
