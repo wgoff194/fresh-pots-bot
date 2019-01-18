@@ -2,9 +2,9 @@
 """
 Written by wbrown
 Importing the nessecary modules:
-'requests' to make the httpd request for the URL.
 """
-import os, requests, time, json
+
+import os, requests, time, json, urllib
 from slackclient import SlackClient
 from datetime import date, timedelta
 from bs4 import BeautifulSoup
@@ -26,6 +26,7 @@ EXAMPLE_COMMAND = "!fp last"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 CHANNEL = sc.api_call("groups.list")['groups'][0]['id']
 
+
 #    channel = chanlist['groups'][0]['id']
 
 """
@@ -37,27 +38,22 @@ def active_users():
 
     """
     user_in = []
-    request = sc.api_call("conversations.members",channel=CHANNEL)
-    print(request)
-"""    
-    if request['ok']:
-        for sl_user in request['members']:
-        #    print(sl_user['name'])
-            
-            if sl_user['name'] !=  'slackbot':
-                url = "https://wallboard.supportdev.liquidweb.com/api/data/agents/" + sl_user['name']
-                html = requests.get(url)
-                text = html.text
-                text = text.split('"')
-                end = len(text)
-                if html.status_code != 200:
-                    raise requests.ConnectionError("Expected status code 200, but got {}".format(page.status_code))
-                for i in range(0, end):
-                    if text[i] == 'punched':
-                        if int(i + int(2)) == 'true':
-                            user_in.append('@' + sl_user['name'])
-            
-"""
+    no_check = ['slackbot','fresh pots','clippy','apopowich','jlangfeldt']
+    sl_mem_codes= sc.api_call("conversations.members",channel=CHANNEL)['members']
+    counter=0
+    for memcode in sl_mem_codes :
+        userdata = sc.api_call("users.info",user=memcode)['user']['name']
+        print(userdata)
+        if userdata not in no_check:
+            json_url = "https://wallboard.supportdev.liquidweb.com/api/data/agents/wbrown" #+ userdata
+            print(json_url)
+            with urllib.request.urlopen(json_url) as url:
+                json_data = json.loads(url.read().decode())
+                print(json_data)
+                if 'punched' in json_data:
+                    user_in.append(userdata)
+    print(user_in)
+
 def parse_bot_commands(slack_events):
     """
         Parses a list of events coming from the Slack RTM API to find bot commands.
