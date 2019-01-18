@@ -24,6 +24,9 @@ Set constants
 RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
 EXAMPLE_COMMAND = "!fp last"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
+CHANNEL = sc.api_call("groups.list")['groups'][0]['id']
+
+#    channel = chanlist['groups'][0]['id']
 
 """
 Set Classes
@@ -34,14 +37,9 @@ def active_users():
 
     """
     user_in = []
-    chanlist = sc.api_call("groups.list")
-    print(chanlist['groups'][0]['id'])
-#    for i in range(0, len(chanlist['channels'])):
-        #if print(chanlist['channels'][i]['name']) == 'illumilatte':
-        #    print(chanlist['channels'][i]['id'])
-        #print
-
-"""    request = sc.api_call("users.list")
+    request = sc.api_call("conversations.members",channel=CHANNEL)
+    print(request)
+"""    
     if request['ok']:
         for sl_user in request['members']:
         #    print(sl_user['name'])
