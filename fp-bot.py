@@ -1,21 +1,20 @@
-#!/usr/bin/python
+#!/usr/bin/python``
 """
 Written by wbrown
 Importing the nessecary modules:
 'requests' to make the httpd request for the URL.
 """
-import os
+import os, requests, time, json
 from slackclient import SlackClient
 from datetime import date, timedelta
 from bs4 import BeautifulSoup
-import requests
-import time
+
 """
 Set Slack Token and Client
 """
 
-SLACK_BOT_TOKEN = 'xoxb-2151910542-528106946470-akZr0fVVW2QwZb05VF3imup3'
-slack_client = SlackClient(SLACK_BOT_TOKEN)
+SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
+sc = SlackClient(SLACK_BOT_TOKEN)
 coffeebot_id = None
 
 """
@@ -35,21 +34,32 @@ def active_users():
 
     """
     user_in = []
-    request = client.api_call("users.list")
+    chanlist = sc.api_call("groups.list")
+    print(chanlist['groups'][0]['id'])
+#    for i in range(0, len(chanlist['channels'])):
+        #if print(chanlist['channels'][i]['name']) == 'illumilatte':
+        #    print(chanlist['channels'][i]['id'])
+        #print
+
+"""    request = sc.api_call("users.list")
     if request['ok']:
         for sl_user in request['members']:
-            url = "https://wallboard.supportdev.liquidweb.com/api/data/agents/" + sl_user['name']
-            html = requests.get(url)
-            text = html.text
-            text = text.split('"')
-            end = len(text)
-            if html.status_code != 200:
-                raise requests.ConnectionError("Expected status code 200, but got {}".format(page.status_code))
-            for i in range(0, end):
-                if text[i] == 'punched':
-                    if int(i + int(2)) == 'true':
-                        user_in.append('@' + sl_user['name'])
-
+        #    print(sl_user['name'])
+            
+            if sl_user['name'] !=  'slackbot':
+                url = "https://wallboard.supportdev.liquidweb.com/api/data/agents/" + sl_user['name']
+                html = requests.get(url)
+                text = html.text
+                text = text.split('"')
+                end = len(text)
+                if html.status_code != 200:
+                    raise requests.ConnectionError("Expected status code 200, but got {}".format(page.status_code))
+                for i in range(0, end):
+                    if text[i] == 'punched':
+                        if int(i + int(2)) == 'true':
+                            user_in.append('@' + sl_user['name'])
+            
+"""
 def parse_bot_commands(slack_events):
     """
         Parses a list of events coming from the Slack RTM API to find bot commands.
@@ -88,7 +98,7 @@ def handle_command(command, channel):
         response = "Thank you for the test"
 
     # Sends the response back to the channel
-    slack_client.api_call(
+    sc.api_call(
         "chat.postMessage",
         channel=channel,
         text=response or default_response
@@ -97,17 +107,20 @@ def handle_command(command, channel):
 #  Main Process
 
 if __name__ == "__main__":
-    if slack_client.rtm_connect(with_team_state=False):
-        print("Starter Bot connected and running!")
+    if sc.rtm_connect(with_team_state=False):
+        print("Fresh-Pots Bot connected and running!")
+         
         refresh_users = 0
         # Read bot's user ID by calling Web API method `auth.test`
-        starterbot_id = slack_client.api_call("auth.test")["user_id"]
+        starterbot_id = sc.api_call("auth.test")["user_id"]
         while True:
             if refresh_users == 3600:
-                active_users()
                 refresh_users = 0
+            if refresh_users == 0:
+                active_users()
             refresh_users += 1
-            command, channel = parse_bot_commands(slack_client.rtm_read())
+        #    print(user_in)
+            command, channel = parse_bot_commands(sc.rtm_read())
             if command:
                 handle_command(command, channel)
             time.sleep(RTM_READ_DELAY)
