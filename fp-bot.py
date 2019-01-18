@@ -37,21 +37,18 @@ def active_users():
     """
 
     """
-    user_in = []
-    no_check = ['slackbot','fresh pots','clippy','apopowich','jlangfeldt']
+    user_in = ''
+    no_check = ['slackbot','freshpots','polly']
     sl_mem_codes= sc.api_call("conversations.members",channel=CHANNEL)['members']
     counter=0
     for memcode in sl_mem_codes :
         userdata = sc.api_call("users.info",user=memcode)['user']['name']
-        print(userdata)
         if userdata not in no_check:
-            json_url = "https://wallboard.supportdev.liquidweb.com/api/data/agents/wbrown" #+ userdata
-            print(json_url)
+            json_url = "https://wallboard.supportdev.liquidweb.com/api/data/agents/" + userdata
             with urllib.request.urlopen(json_url) as url:
                 json_data = json.loads(url.read().decode())
-                print(json_data)
                 if 'punched' in json_data:
-                    user_in.append(userdata)
+                    user_in = user_in + ' @'+userdata
     print(user_in)
 
 def parse_bot_commands(slack_events):
