@@ -11,6 +11,9 @@ Written by wbrown
 EXAMPLE_COMMAND = "!fp last"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
+###
+# Functions
+### 
 
 def parse_bot_commands(slack_events):
     """
