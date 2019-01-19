@@ -30,8 +30,6 @@ coffeebot_id = None
 ###
 
 RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
-#EXAMPLE_COMMAND = "!fp last"
-#MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 sl_channel = sc.api_call("groups.list")['groups'][0]['id']
 
 ###
