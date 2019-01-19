@@ -1,3 +1,3 @@
 #!/bin/bash
 
-SLACK_BOT_TOKEN="xoxb-1234567890-Somelettersgohereabout24" python3 freshpots.py
+SLACK_BOT_TOKEN="xoxb-2151910542-528106946470-PMUoqL8OoNbBNHtOFhhPdAQu" python3 freshpots.py

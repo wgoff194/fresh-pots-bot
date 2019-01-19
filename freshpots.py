@@ -1,6 +1,7 @@
 #!/usr/bin/python``
 """
 Written by wbrown
+Importing the nessecary modules:
 """
 
 ###
@@ -30,6 +31,8 @@ coffeebot_id = None
 ###
 
 RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
+#EXAMPLE_COMMAND = "!fp last"
+#MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 sl_channel = sc.api_call("groups.list")['groups'][0]['id']
 
 ###
@@ -61,3 +64,4 @@ if __name__ == "__main__":
             time.sleep(RTM_READ_DELAY)
     else:
         print("Connection failed. Exception traceback printed above.")
+
