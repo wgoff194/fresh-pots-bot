@@ -31,8 +31,6 @@ coffeebot_id = None
 ###
 
 RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
-#EXAMPLE_COMMAND = "!fp last"
-#MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 sl_channel = sc.api_call("groups.list")['groups'][0]['id']
 
 ###
@@ -40,6 +38,7 @@ sl_channel = sc.api_call("groups.list")['groups'][0]['id']
 ###
 
 user_in=''
+wall_chk= '0'
 
 ###
 # Main Process
@@ -49,19 +48,25 @@ if __name__ == "__main__":
     if sc.rtm_connect(with_team_state=False):
         print("Fresh-Pots Bot connected and running!")
         refresh_users = 0
+        wall_chk = wallboard.wallchk()
+        if wall_chk == '2':
+            user_in = " @here"
+            print('wallboard not found, ping set to:' + user_in)
+        else:
+            user_in = wallboard.active_users(sc,sl_channel,user_in)
+            print('Wallboard found, ping currently set to:' + user_in)
         # Read bot's user ID by calling Web API method `auth.test`
         starterbot_id = sc.api_call("auth.test")["user_id"]
         while True:
-            if refresh_users == 3600:
-                refresh_users = 0
-            if refresh_users == 0:
-                user_in = wallboard.active_users(sc,sl_channel,user_in)
-                print(user_in)
-            refresh_users += 1
+            if wall_chk == '1':
+                if refresh_users == 3600:
+                    refresh_users = 0
+                    user_in = wallboard.active_users(sc,sl_channel,user_in)
+                    print(user_in)
+                refresh_users += 1
             command, channel = slackapi.parse_bot_commands(sc.rtm_read())
             if command:
                 slackapi.handle_command(command, channel)
             time.sleep(RTM_READ_DELAY)
     else:
         print("Connection failed. Exception traceback printed above.")
-
