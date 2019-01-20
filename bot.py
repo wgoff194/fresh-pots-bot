@@ -49,14 +49,19 @@ class Bot(object):
     def listen(self):
         if self.slack_client.rtm_connect(with_team_state=False):
             print("Successfully connected, listening for commands")
-            self.wall_chk = wallboard.wallchk(self)
             
-            if self.wall_chk == '2':
+            if self.wallboard_url == 'none':
                 self.user_in = " @here"
-                print('wallboard not found, ping set to:' + self.user_in)
+                print("Wallboard not specified, setting ping to:" + self.user_in)
             else:
-                self.user_in = wallboard.active_users(self)
-                print('Wallboard found, ping currently set to:' + self.user_in)
+                self.wall_chk = wallboard.wallchk(self)
+                 
+                if self.wall_chk == '2':
+                    self.user_in = " @here"
+                    print('wallboard not found, ping set to:' + self.user_in)
+                else:
+                    self.user_in = wallboard.active_users(self)
+                    print('Wallboard found, ping currently set to:' + self.user_in)
                 
             while True:
                 
