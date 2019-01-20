@@ -25,7 +25,6 @@ def active_users(sc,sl_channel,user_in):
     sl_mem_codes= sc.api_call("conversations.members",channel=sl_channel)['members']
     for memcode in sl_mem_codes :
         userdata = sc.api_call("users.info",user=memcode)['user']['name']
-        print(userdata)
         json_url = "https://wallboard.supportdev.liquidweb.com/api/data/agents/" + userdata
         try:
             conni = urllib.request.urlopen(json_url)
