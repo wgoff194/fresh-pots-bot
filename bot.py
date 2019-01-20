@@ -19,8 +19,9 @@ import wallboard
 
 class Bot(object):
     def __init__(self):
-        slack_bot_token = os.environ["SLACK_BOT_TOKEN"]
-        self.slack_client = SlackClient(slack_bot_token)
+        self.slack_bot_token = os.environ["SLACK_BOT_TOKEN"]
+        self.slack_client = SlackClient(self.slack_bot_token)
+        self.wallboard_url = os.environ["WALLBOARD_URL"]
         self.bot_name = "freshpots"
         self.bot_id = self.get_bot_id()
         self.user_in = ''
@@ -48,13 +49,13 @@ class Bot(object):
     def listen(self):
         if self.slack_client.rtm_connect(with_team_state=False):
             print("Successfully connected, listening for commands")
-            self.wall_chk = wallboard.wallchk()
+            self.wall_chk = wallboard.wallchk(self)
             
             if self.wall_chk == '2':
                 self.user_in = " @here"
                 print('wallboard not found, ping set to:' + self.user_in)
             else:
-                self.user_in = wallboard.active_users(self.slack_client,self.sl_channel,self.user_in)
+                self.user_in = wallboard.active_users(self)
                 print('Wallboard found, ping currently set to:' + self.user_in)
                 
             while True:
@@ -63,7 +64,7 @@ class Bot(object):
                     
                     if self.refresh_users == 3600:
                         self.refresh_users = 0
-                        self.user_in = wallboard.active_users(self.slack_client,self.sl_channel,self.user_in)
+                        self.user_in = wallboard.active_users(self)
                         print(self.user_in)
                     
                     self.refresh_users += 1
