@@ -26,3 +26,7 @@ echo "\n git username set to $(git config --global user.name)\n"
 echo;read -p "What is the git email?: " email
 git config --global user.email $email
 echo "\n git email set to $(git config --global user.email)"
+
+git pull https://github.com/wgoff194/fresh-pots-bot.git master
+git push -u https://github.com/wgoff194/fresh-pots-bot.git master:master
+git config --global credential.helper cache
