@@ -36,4 +36,4 @@ echo "\n git email set to $(git config --global user.email)"
 git init
 git pull https://github.com/wgoff194/fresh-pots-bot.git master
 git push -u https://github.com/wgoff194/fresh-pots-bot.git master:master
-git config --global credential.helper cache
+git config --global credential.helper store
