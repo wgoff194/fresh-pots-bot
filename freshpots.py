@@ -1,7 +1,6 @@
 #!/usr/bin/python``
 """
 Written by wbrown
-Importing the nessecary modules:
 """
 
 ###
@@ -70,4 +69,3 @@ if __name__ == "__main__":
             time.sleep(RTM_READ_DELAY)
     else:
         print("Connection failed. Exception traceback printed above.")
-
