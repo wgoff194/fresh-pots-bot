@@ -1,7 +1,6 @@
 #!/usr/bin/python``
 """
 Written by wbrown
-Importing the nessecary modules:
 """
 
 ###
