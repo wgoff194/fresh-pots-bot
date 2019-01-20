@@ -7,10 +7,10 @@ class Event:
 	
 	def wait_for_event(self):
 		events = self.bot.slack_client.rtm_read()
-		
+		print('waiting for event' + events)
 		if events and len(events) > 0:
 			for event in events:
-				#print event
+				print(event)
 				self.parse_event(event)
 				
 	def parse_event(self, event):

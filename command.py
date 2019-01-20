@@ -1,7 +1,7 @@
 class Command(object):
 	def __init__(self):
 		self.commands = { 
-			"jump" : self.jump,
+			"test" : self.test,
 			"help" : self.help
 		}
 
@@ -15,8 +15,8 @@ class Command(object):
 		
 		return response
 		
-	def jump(self):
-		return "Kris Kross will make you jump jump"
+	def test(self):
+		return "Test has been successful!"
 	
 	def help(self):
 		response = "Currently I support the following commands:\r\n"
