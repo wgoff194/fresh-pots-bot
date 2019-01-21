@@ -7,10 +7,10 @@ class Event:
 	
 	def wait_for_event(self):
 		events = self.bot.slack_client.rtm_read()
-		print('waiting for event' + events)
+		
 		if events and len(events) > 0:
 			for event in events:
-				print(event)
+				#print event
 				self.parse_event(event)
 				
 	def parse_event(self, event):
@@ -19,6 +19,6 @@ class Event:
 	
 	def handle_event(self, user, command, channel):
 		if command and channel:
-			print("Received command: " + command + " in channel: " + channel + " from user: " + user)
+			print "Received command: " + command + " in channel: " + channel + " from user: " + user
 			response = self.command.handle_command(user, command)
 			self.bot.slack_client.api_call("chat.postMessage", channel=channel, text=response, as_user=True)
