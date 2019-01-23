@@ -5,13 +5,13 @@ class Command(object):
 			"help" : self.help
 		}
 
-	def handle_command(self, user, command):
+	def handle_command(self, user, command,channel,request,string):
 		response = "<@" + user + ">: "
 	
 		if command in self.commands:
 			response += self.commands[command]()
 		else:
-			response += "Sorry I don't understand the command: " + command + ". " + self.help()
+			response += "Sorry I don't understand the command"
 		
 		return response
 		
