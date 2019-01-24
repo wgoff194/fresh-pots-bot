@@ -25,14 +25,32 @@ class Event:
                 
                 if '!fp' in event['text']:
                     fphandle='!fp'
+                
                 if '!freshpots' in event['text']:
                     fphandle='!freshpots'
                 
-                request=event['text'].split(fphandle)[1].strip()
-                command=request.split()[0]
-                string=request.split(command)[1].strip()
+                try: 
+                    event['text'].split(fphandle)[1]
+                except IndexError:
+                    request='help me'
+                else:               
+                    request=event['text'].split(fphandle)[1].strip()
+                
+                try:
+                    command=request.split()[0]
+                except IndexError:
+                    command='help'
+                else:
+                    command=request.split()[0]
+                
+                try:
+                    string=request.split(command)[1].strip()
+                except IndexError:
+                    string="help"
+                else:
+                    string=request.split(command)[1].strip()
 
-                print("Request: " + request + " | Command: " + command + " | String : " + string)
+                print("Command: " + command + " | String : " + string)
                 self.handle_event(event['user'], command.lower(), event['channel'],string)
 	
     def handle_event(self, user, command, channel, request):

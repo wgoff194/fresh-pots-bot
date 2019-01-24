@@ -107,9 +107,9 @@ class Command(object):
         return response
 
     def remcoffee(self,user, channel, string):
-        if sting in self.event.bot.datapool[channel]['coffee']:
+        if string in self.event.bot.datapool[channel]['coffee']:
             self.event.bot.datapool[channel]['coffee'].remove(string)
-            response = string + "has been removed"
+            response = string + " has been removed"
         else:
             response = string + " is not listed"
         return response
@@ -124,4 +124,10 @@ class Command(object):
         response = self.event.bot.datapool[channel][prevpot1]['type'] + " @ " + self.event.bot.datapool[channel][prevpot1]['time'] + "\n"
         response += self.event.bot.datapool[channel][prevpot2]['type'] + " @ " + self.event.bot.datapool[channel][prevpot2]['time'] + "\n"
         response += self.event.bot.datapool[channel][prevpot3]['type'] + " @ " + self.event.bot.datapool[channel][prevpot3]['time'] + "\n"
-        return response 
+        return response
+
+    def lastpot(self,user, channel, string):
+        age = datetime.datetime.now() - self.event.bot.datapool[channel]['newpot']['time']
+        seconds=age.total_seconds()
+        time=datetime(1,1,1) + sec
+        response = self.event.bot.datapool[channel]['newpot']['type'] + " was made " + "%d:%d:%d:%d" % (d.day-1, d.hour, d.minute, d.second) + " ago"
