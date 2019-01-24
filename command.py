@@ -8,27 +8,32 @@ class Command(object):
     def __init__(self, event):
         self.event = event
         self.commands = {
-                "test":self.test,
-                "help":self.help,
-                "add":self.addcoffee,
-                "new":self.newpots,
-                "list":self.listcoffee,
-                "rm":self.remcoffee,
-                "optin":self.optin,
-                "optout":self.optout,
-                "ping":self.pinglist
+                "new":{'com':self.newpots,'desc':'Announces fresh pot and records to time'},
+                "last":{'com':self.lastpot,'desc':'Info on last pot of coffee'},
+                "prev":{'com':self.lastpot,'desc':'List of previous pots of coffee'},
+                "list":{'com':self.listcoffee,'desc':'Lists current coffee stock'},
+                "add":{'com':self.addcoffee,'desc':'Add a coffee to list of available stock'},
+                "rm":{'com':self.remcoffee,'desc':'Removes coffee from coffee stock'},
+                "optin":{'com':self.optin,'desc':'Add yourself to ping list'},
+                "optout":{'com':self.optout,'desc':'remove yourself from ping list'},
+                "ping":{'com':self.pinglist,'desc':'Ping users on ping list'},
+                "help":{'com':self.help,'desc':'Prints list of usable commands'},
+                "test":{'com':self.test,'desc':'This is for testing the bot'}
                 }
 
     def handle_command(self, user, command, channel, string):
         response = "<@" + user + ">: "
         
         if command in self.commands:
-            response = self.commands[command](user, channel, string)
+            response = self.commands[command]['com'](user, channel, string)
         else:
             response += "Sorry I don't understand the command, for list of command please use `help`"
 		
         return response
-		
+
+    def writedata(self,user, channel, string):
+        self.datadump=json.dumps(self.event.bot.datapool)
+
     def test(self,user, channel, string):
         return "Test Complete"
     
@@ -36,7 +41,7 @@ class Command(object):
         response = "Currently I support the following commands:\r\n"
 
         for command in self.commands:
-            response += command + "\r\n"
+            response += command + " : " + self.commands[command]['desc'] + "\r\n"
 			
         return response
 
@@ -48,9 +53,13 @@ class Command(object):
             response = string + " is already listed"
         return response
 
-    def writedata(self,user, channel, string):
-        self.datadump=json.dumps(self.event.bot.datapool)
-        
+    def pinglist(self,user, channel, string):
+        response = ''
+        for user in self.event.bot.datapool[channel]['user']:
+            response += " <@" + user + ">"
+        return response
+
+
     def newpots(self,user, channel, string):
         if 'type' in self.event.bot.datapool[channel]['prevpot2']:
             self.event.bot.datapool[channel]['prevpot3']=self.event.bot.datapool[channel]['prevpot2']
@@ -69,9 +78,9 @@ class Command(object):
 
         self.event.bot.datapool[channel]['newpot']={'type':string,'time':datetime.datetime.now()}
 
-        pinglist = pinglist(self,user, channel, string)
+        ping = self.pinglist(user, channel, string)
 
-        response = pinglist + "\nWe have a fresh pot of " + string + "\nhttps://i.imgur.com/l10zeET.jpg"
+        response = ping + "\nWe have a fresh pot of " + string + "\nhttps://i.imgur.com/l10zeET.jpg"
 
         return response 
 
@@ -112,12 +121,6 @@ class Command(object):
             response = string + " has been removed"
         else:
             response = string + " is not listed"
-        return response
-
-    def pinglist(self,user, channel, string):
-        response = '' 
-        for user in self.event.bot.datapool[channel]['user']:
-            response += " <@" + user + ">"
         return response
 
     def prevlist(self,user, channel, string):
