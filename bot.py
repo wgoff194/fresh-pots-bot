@@ -24,7 +24,8 @@ class Bot(object):
         self.wall_chk = '0'
         self.refresh_users = 0
         self.tags=['!fp','!freshpots']
-
+        self.datapool={}
+    
         if self.bot_id is None:
             exit("Error, could not find " + self.bot_name)
 	
