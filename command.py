@@ -190,23 +190,23 @@ class Command(object):
     # Define function to list previous pots
     def prevlist(self, user, channel, string):
         # Set respond for previous pot 1
-        response = self.event.bot.datapool[channel][prevpot1]['type'] + " : " + self.gettime('prevpot1') + " ago\n"
+        response = self.event.bot.datapool[channel][prevpot1]['type'] + " : " + self.gettime(channel, 'prevpot1') + " ago\n"
         # Set respond for previous pot 2
-        response += self.event.bot.datapool[channel][prevpot2]['type'] + " : " + self.gettime('prevpot2') + " ago\n"
+        response += self.event.bot.datapool[channel][prevpot2]['type'] + " : " + self.gettime(channel, 'prevpot2') + " ago\n"
         # Set respond for previous pot 3
-        response += self.event.bot.datapool[channel][prevpot3]['type'] + " : " + self.gettime('prevpot3') + " ago\n"
+        response += self.event.bot.datapool[channel][prevpot3]['type'] + " : " + self.gettime(channel, 'prevpot3') + " ago\n"
         # Return response
         return response
     
     # Define function to get last made coffee and how long ago
     def lastpot(self, user, channel, string):
         # Set response with name and age
-        response = self.event.bot.datapool[channel]['newpot']['type'] + " is " + self.gettime('newpot') + " old"
+        response = self.event.bot.datapool[channel]['newpot']['type'] + " is " + self.gettime(channel, 'newpot') + " old"
         # Return Data
         return response
     
     # Define function to get age of pot called 
-    def gettime(self, potname):
+    def gettime(self, channel, potname):
         # Get difference in age
         age = datetime.datetime.now() - self.event.bot.datapool[channel][potname]['time']
         # Set difference in seconds
