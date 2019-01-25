@@ -19,9 +19,9 @@ class Command(object):
         self.event = event
         # Set list of commands 
         self.commands = {
-                "new":{'com':self.newpots,'desc':'Announces fresh pot and records to time'},
+                "new":{'com':self.newpots,'desc':'Announces fresh pot and records time'},
+                "kill":{'com':self.killpots,'desc':'Set last pot to killed status and records time'},
                 "last":{'com':self.lastpot,'desc':'Info on last pot of coffee'},
-                #"prev":{'com':self.prevlist,'desc':'List of previous pots of coffee'},
                 "list":{'com':self.listcoffee,'desc':'Lists current coffee stock'},
                 "add":{'com':self.addcoffee,'desc':'Add a coffee to list of available stock'},
                 "rm":{'com':self.remcoffee,'desc':'Removes coffee from coffee stock'},
@@ -101,21 +101,6 @@ class Command(object):
     # Define function to set name and time stamp for new pot
     # Move current into previous list moving the previous list down in a waterfall
     def newpots(self, user, channel, string):
-        # Check if the second previous pot has data and move to third if found
-        if 'type' in self.event.bot.datapool[channel]['prevpot2']:
-            self.event.bot.datapool[channel]['prevpot3']=self.event.bot.datapool[channel]['prevpot2']
-        else:
-            self.event.bot.datapool[channel]['prevpot3']={}
-        # Check if the first previous pot has data and move to second if found
-        if 'type' in self.event.bot.datapool[channel]['prevpot1']:
-            self.event.bot.datapool[channel]['prevpot2']=self.event.bot.datapool[channel]['prevpot1']
-        else:
-            self.event.bot.datapool[channel]['prevpot2']={}
-        # Check if the last pot has data and move to first if found
-        if 'type' in self.event.bot.datapool[channel]['newpot']:
-            self.event.bot.datapool[channel]['prevpot1']=self.event.bot.datapool[channel]['newpot']
-        else:
-            self.event.bot.datapool[channel]['prevpot1']={}
         # Save current new pot and time stamp
         self.event.bot.datapool[channel]['newpot']={'type':string,'time':datetime.datetime.now()}
         # Create ping list for announcment
@@ -126,6 +111,21 @@ class Command(object):
         self.writedata(user, channel, string)
         # Return response 
         return response 
+
+    # Define function to set name and time stamp for new pot
+    # Move current into previous list moving the previous list down in a waterfall
+    def killpots(self, user, channel, string):
+        # Save current new pot and time stamp
+        self.event.bot.datapool[channel]['newpot']={'type':'killed','time':datetime.datetime.now()}
+        # Create ping list for announcment
+        ping = self.pinglist(user, channel, string)
+        # Respond with ping, what was made and the Fresh Pots MEME
+        response = ping + "\nShould we make a new pot?"
+        # Save datapool
+        self.writedata(user, channel, string)
+        # Return response 
+        return response
+
 
     # Define function to list coffees
     def listcoffee(self, user, channel, string):
@@ -187,25 +187,10 @@ class Command(object):
         # Return Response
         return response
     
-    # Define function to list previous pots
-    def prevlist(self, user, channel, string):
-        response = ''
-        # Set respond for previous pot 1
-        if 'type' in self.event.bot.datapool[channel]['prevpot1']:
-            response = self.event.bot.datapool[channel]['prevpot1']['type'] + " : " + self.gettime(channel, 'prevpot1') + " ago\n"
-        # Set respond for previous pot 2
-        if 'type' in self.event.bot.datapool[channel]['prevpot2']:
-            response += self.event.bot.datapool[channel]['prevpot2']['type'] + " : " + self.gettime(channel, 'prevpot2') + " ago\n"
-        # Set respond for previous pot 3
-        if 'type' in self.event.bot.datapool[channel]['prevpot3']:
-            response += self.event.bot.datapool[channel]['prevpot3']['type'] + " : " + self.gettime(channel, 'prevpot3') + " ago\n"
-        # Return response
-        return response
-    
     # Define function to get last made coffee and how long ago
     def lastpot(self, user, channel, string):
         # Set response with name and age
-        response = "The last coffee, " + self.event.bot.datapool[channel]['newpot']['type'] + ", was made " + self.gettime(channel, 'newpot') + " ago"
+        response = "The last coffee was " + self.event.bot.datapool[channel]['newpot']['type'] + " : " + self.gettime(channel, 'newpot') + " ago"
         # Return Data
         return response
     
