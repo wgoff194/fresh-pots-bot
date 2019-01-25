@@ -21,7 +21,7 @@ class Command(object):
         self.commands = {
                 "new":{'com':self.newpots,'desc':'Announces fresh pot and records to time'},
                 "last":{'com':self.lastpot,'desc':'Info on last pot of coffee'},
-                "prev":{'com':self.lastpot,'desc':'List of previous pots of coffee'},
+                "prev":{'com':self.prevlist,'desc':'List of previous pots of coffee'},
                 "list":{'com':self.listcoffee,'desc':'Lists current coffee stock'},
                 "add":{'com':self.addcoffee,'desc':'Add a coffee to list of available stock'},
                 "rm":{'com':self.remcoffee,'desc':'Removes coffee from coffee stock'},
