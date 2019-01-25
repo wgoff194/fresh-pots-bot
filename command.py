@@ -21,7 +21,7 @@ class Command(object):
         self.commands = {
                 "new":{'com':self.newpots,'desc':'Announces fresh pot and records to time'},
                 "last":{'com':self.lastpot,'desc':'Info on last pot of coffee'},
-                "prev":{'com':self.prevlist,'desc':'List of previous pots of coffee'},
+                #"prev":{'com':self.prevlist,'desc':'List of previous pots of coffee'},
                 "list":{'com':self.listcoffee,'desc':'Lists current coffee stock'},
                 "add":{'com':self.addcoffee,'desc':'Add a coffee to list of available stock'},
                 "rm":{'com':self.remcoffee,'desc':'Removes coffee from coffee stock'},
@@ -191,10 +191,10 @@ class Command(object):
     def prevlist(self, user, channel, string):
         response = ''
         # Set respond for previous pot 1
-        if 'type' in self.event.bot.datapool[channel]['prevpoti']:
+        if 'type' in self.event.bot.datapool[channel]['prevpot1']:
             response = self.event.bot.datapool[channel]['prevpot1']['type'] + " : " + self.gettime(channel, 'prevpot1') + " ago\n"
         # Set respond for previous pot 2
-        if 'type' in self.event.bot.datapool[channel]['prevpot3']:
+        if 'type' in self.event.bot.datapool[channel]['prevpot2']:
             response += self.event.bot.datapool[channel]['prevpot2']['type'] + " : " + self.gettime(channel, 'prevpot2') + " ago\n"
         # Set respond for previous pot 3
         if 'type' in self.event.bot.datapool[channel]['prevpot3']:
@@ -205,7 +205,7 @@ class Command(object):
     # Define function to get last made coffee and how long ago
     def lastpot(self, user, channel, string):
         # Set response with name and age
-        response = self.event.bot.datapool[channel]['newpot']['type'] + " is " + self.gettime(channel, 'newpot') + " old"
+        response = "The last coffee, " + self.event.bot.datapool[channel]['newpot']['type'] + ", was made " + self.gettime(channel, 'newpot') + " ago"
         # Return Data
         return response
     
@@ -225,6 +225,6 @@ class Command(object):
         # remaining seconds just in case
         seconds = s - (minutes * 60)
         # Set response with formatted data
-        response = '{:01} hours {:02} minutes'.format(int(hours), int(minutes))
+        response = '{:01} hours {:01} minutes'.format(int(hours), int(minutes))
         # Return formatted data 
         return response

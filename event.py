@@ -66,7 +66,7 @@ class Event:
                     else:
                         string=request.split(command)[1].strip()
                 # Print command and string to terminal for testing
-                print("Command: " + command + " | String : " + string)
+                # print("Command: " + command + " | String : " + string)
                 # Call event handler 
                 self.handle_event(event['user'], command.lower(), event['channel'],string)
     
