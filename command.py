@@ -212,8 +212,8 @@ class Command(object):
         # Set difference in seconds
         seconds=age.total_seconds()
         # Set formatting
-        time=datetime(1,1,1) + sec
+        fptime=datetime(1,1,1) + sec
         # Set response with formatted data
-        response = "%d:%d:%d:%d" % (time.day-1, time.hour, time.minute, time.second)
+        response = "%d:%d:%d:%d" % (fptime.day-1, fptime.hour, fptime.minute, fptime.second)
         # Return formatted data 
         return response
