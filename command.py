@@ -210,10 +210,17 @@ class Command(object):
         # Get difference in age
         age = datetime.datetime.now() - self.event.bot.datapool[channel][potname]['time']
         # Set difference in seconds
-        seconds=age.total_seconds()
-        # Set formatting
-        fptime=datetime(1,1,1) + sec
+        s=age.total_seconds()
+        # Process Math
+        # hours
+        hours = s // 3600 
+        # remaining seconds
+        s = s - (hours * 3600)
+        # minutes
+        minutes = s // 60
+        # remaining seconds just in case
+        seconds = s - (minutes * 60)
         # Set response with formatted data
-        response = "%d:%d:%d:%d" % (fptime.day-1, fptime.hour, fptime.minute, fptime.second)
+        response = '{:01} hours {:02} minutes'.format(int(hours), int(minutes))
         # Return formatted data 
         return response
