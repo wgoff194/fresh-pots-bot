@@ -67,7 +67,7 @@ class Command(object):
         response = "Currently I support the following commands:\r\n```"
         # Iterate through commands with descriptions
         for command in self.commands:
-            response += command + "\t:\t" + self.commands[command]['desc'] + "\r\n"
+            response += "{:<10}".format(command) + ":  " + self.commands[command]['desc'] + "\r\n"
 	# Close code block 
         response += "```"
         # Return list		
@@ -189,12 +189,16 @@ class Command(object):
     
     # Define function to list previous pots
     def prevlist(self, user, channel, string):
+        response = ''
         # Set respond for previous pot 1
-        response = self.event.bot.datapool[channel][prevpot1]['type'] + " : " + self.gettime(channel, 'prevpot1') + " ago\n"
+        if 'type' in self.event.bot.datapool[channel]['prevpoti']:
+            response = self.event.bot.datapool[channel]['prevpot1']['type'] + " : " + self.gettime(channel, 'prevpot1') + " ago\n"
         # Set respond for previous pot 2
-        response += self.event.bot.datapool[channel][prevpot2]['type'] + " : " + self.gettime(channel, 'prevpot2') + " ago\n"
+        if 'type' in self.event.bot.datapool[channel]['prevpot3']:
+            response += self.event.bot.datapool[channel]['prevpot2']['type'] + " : " + self.gettime(channel, 'prevpot2') + " ago\n"
         # Set respond for previous pot 3
-        response += self.event.bot.datapool[channel][prevpot3]['type'] + " : " + self.gettime(channel, 'prevpot3') + " ago\n"
+        if 'type' in self.event.bot.datapool[channel]['prevpot3']:
+            response += self.event.bot.datapool[channel]['prevpot3']['type'] + " : " + self.gettime(channel, 'prevpot3') + " ago\n"
         # Return response
         return response
     

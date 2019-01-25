@@ -57,6 +57,7 @@ class Bot(object):
 
             with open('freshpots.pkl', 'rb') as fp:
                 self.datapool = pickle.load(fp)
+            fp.close() 
 
             while True:
                 self.event.wait_for_event()

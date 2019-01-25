@@ -36,30 +36,35 @@ class Event:
                 self.channel_create(chanevent)
             # Check for command flags
             if '!fp' in event['text'] or '!freshpots' in event['text']:
-                # Check for what tag is in use
-                if '!fp' in event['text']:
-                    fphandle='!fp'
-                if '!freshpots' in event['text']:
-                    fphandle='!freshpots'
-                # Check if command is passed after flag
-                try: 
-                    event['text'].split(fphandle)[1]
-                except IndexError:
+                if '!fp' in event['text'] and '!freshpots' in event['text']:
                     request='help me'
-                else:               
-                    request=event['text'].split(fphandle)[1].strip()
-                try:
-                    command=request.split()[0]
-                except IndexError:
                     command='help'
-                else:
-                    command=request.split()[0]
-                try:
-                    string=request.split(command)[1].strip()
-                except IndexError:
                     string="help"
                 else:
-                    string=request.split(command)[1].strip()
+                    # Check for what tag is in use
+                    if '!fp' in event['text']:
+                        fphandle='!fp'
+                    if '!freshpots' in event['text']:
+                        fphandle='!freshpots'
+                    # Check if command is passed after flag
+                    try: 
+                        event['text'].split(fphandle)[1]
+                    except IndexError:
+                        request='help me'
+                    else:               
+                        request=event['text'].split(fphandle)[1].strip()
+                    try:
+                        command=request.split()[0]
+                    except IndexError:
+                        command='help'
+                    else:
+                        command=request.split()[0]
+                    try:
+                        string=request.split(command)[1].strip()
+                    except IndexError:
+                        string="help"
+                    else:
+                        string=request.split(command)[1].strip()
                 # Print command and string to terminal for testing
                 print("Command: " + command + " | String : " + string)
                 # Call event handler 
