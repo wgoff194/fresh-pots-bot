@@ -55,9 +55,10 @@ class Bot(object):
         if self.slack_client.rtm_connect(with_team_state=False):
             print("Successfully connected, listening for commands")
 
-            with open('freshpots.pkl', 'rb') as fp:
-                self.datapool = pickle.load(fp)
-            fp.close() 
+            if os.path.isfile('freshpots.pkl'):
+                with open('freshpots.pkl', 'rb') as fp:
+                    self.datapool = pickle.load(fp)
+                fp.close() 
 
             while True:
                 self.event.wait_for_event()
